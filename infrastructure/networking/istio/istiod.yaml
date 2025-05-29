@@ -16,5 +16,5 @@ spec:
         name: istio
         namespace: flux-system
       interval: 12h
-    values:
-      profile: ambient
+  values:
+    profile: ambient
