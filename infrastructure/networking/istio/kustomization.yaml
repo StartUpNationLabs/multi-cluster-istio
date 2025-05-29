@@ -6,6 +6,7 @@ resources:
 - ingress.yaml
 - istiod.yaml
 - ztunnel.yaml
+- namespace.yaml
 labels:
 - pairs:
     toolkit.fluxcd.io/tenant: sre-team
