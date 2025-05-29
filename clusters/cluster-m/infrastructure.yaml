@@ -46,9 +46,8 @@ spec:
   path: ./infrastructure/networking/kiali
   prune: true
   wait: true
-  dependencies:
+  dependsOn:
     - name: istio
-      namespace: flux-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
