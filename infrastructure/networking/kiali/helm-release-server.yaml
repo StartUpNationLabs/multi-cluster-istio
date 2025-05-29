@@ -13,7 +13,7 @@ spec:
       version: "*"
       sourceRef:
         kind: HelmRepository
-        name: kali
+        name: kiali
       interval: 12h
   values:
     deployment:
