@@ -1,0 +1,159 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: monitoring
+  labels:
+    toolkit.fluxcd.io/tenant: sre-team
+spec:
+  interval: 60m
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: "57.0.0"
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: monitoring
+      interval: 12h
+  
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+            patch: |
+              - op: add
+                path: /spec/template/spec/dnsConfig
+                value:
+                  options:
+                    - name: ndots
+                      value: "1"
+
+  values:
+    alertmanager:
+      alertmanagerSpec:
+        replicas: 3
+    prometheus:
+      prometheusSpec:
+        replicas: 3
+        podMonitorNamespaceSelector:
+          any: true
+        podMonitorSelector: { }
+        podMonitorSelectorNilUsesHelmValues: false
+        ruleNamespaceSelector:
+          any: true
+        ruleSelector: { }
+        ruleSelectorNilUsesHelmValues: false
+        serviceMonitorNamespaceSelector:
+          any: true
+        serviceMonitorSelector: { }
+        serviceMonitorSelectorNilUsesHelmValues: false
+        additionalScrapeConfigs:
+          # federation,
+          - job_name: 'maxime-datacenter'
+            metrics_path: /federate
+            scrape_interval: 15s
+            honor_labels: true
+            params:
+              # match everything
+              'match[]':
+                - '{job="blackbox-http"}'
+                - '{job="blackbox-icmp"}'
+                - '{job="kasa"}'
+                - '{job="pve"}'
+                - '{job="network-checker"}'
+                - '{job="node"}'
+            static_configs:
+              - targets: [ '100.64.0.42:9090' ]
+            # add "datacenter = maxime" label to all metrics
+            relabel_configs:
+              - source_labels: [ ]
+                target_label: datacenter
+                replacement: maxime
+
+          - job_name: 'haproxy'
+            metrics_path: /metrics
+            scrape_interval: 5s
+            static_configs:
+              - targets: [ '100.64.0.5:8404' ]
+
+
+    grafana:
+
+      enabled: true
+      replicas: 1
+
+
+      additionalDataSources: {}
+#        - name: loki
+#          type: loki
+#          url: http://loki-read.monitoring.svc.cluster.local:3100
+#          jsonData:
+#            tlsSkipVerify: true
+#            httpHeaderName1: "X-Scope-OrgID"
+#          secureJsonData:
+#            httpHeaderValue1: "admins"
+      plugins:
+        - grafana-piechart-panel
+        - grafana-worldmap-panel
+        - grafana-clock-panel
+        - grafana-simple-json-datasource
+        - grafana-kubernetes-app
+
+
+      # Provision grafana-dashboards-kubernetes
+      dashboardProviders:
+        dashboardproviders.yaml:
+          apiVersion: 1
+          providers:
+            - name: 'datacenter'
+              orgId: 1
+              folder: 'Datacenter'
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/datacenter
+            - name: 'traefik'
+              orgId: 1
+              folder: 'Traefik'
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/traefik
+            - name: 'kubernetes'
+              orgId: 1
+              folder: 'Kubernetes'
+              type: file
+              disableDeletion: false
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/kubernetes
+      dashboards:
+        traefik:
+          traefik-dashboard:
+            gnetId: 17035
+            datasource: Prometheus
+
+        kubernetes:
+          k8s-system-api-server:
+            url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
+          k8s-system-coredns:
+            url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-coredns.json
+          k8s-views-global:
+            url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json
+          k8s-views-namespaces:
+            url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json
+          k8s-views-nodes:
+            url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json
+          k8s-views-pods:
+            url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
+          k8s-inner-network:
+            gnetId: 20707
+            revision: 2
+          kepler:
+            url: https://raw.githubusercontent.com/sustainable-computing-io/kepler/refs/heads/main/grafana-dashboards/Kepler-Exporter.json
+          k8s-loadbalancer:
+            url: 'https://raw.githubusercontent.com/rfmoz/grafana-dashboards/master/prometheus/haproxy-2-full.json'
