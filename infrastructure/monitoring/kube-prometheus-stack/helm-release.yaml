@@ -47,34 +47,6 @@ spec:
           any: true
         serviceMonitorSelector: { }
         serviceMonitorSelectorNilUsesHelmValues: false
-        additionalScrapeConfigs:
-          # federation,
-          - job_name: 'maxime-datacenter'
-            metrics_path: /federate
-            scrape_interval: 15s
-            honor_labels: true
-            params:
-              # match everything
-              'match[]':
-                - '{job="blackbox-http"}'
-                - '{job="blackbox-icmp"}'
-                - '{job="kasa"}'
-                - '{job="pve"}'
-                - '{job="network-checker"}'
-                - '{job="node"}'
-            static_configs:
-              - targets: [ '100.64.0.42:9090' ]
-            # add "datacenter = maxime" label to all metrics
-            relabel_configs:
-              - source_labels: [ ]
-                target_label: datacenter
-                replacement: maxime
-
-          - job_name: 'haproxy'
-            metrics_path: /metrics
-            scrape_interval: 5s
-            static_configs:
-              - targets: [ '100.64.0.5:8404' ]
 
 
     grafana:
@@ -151,7 +123,3 @@ spec:
           k8s-inner-network:
             gnetId: 20707
             revision: 2
-          kepler:
-            url: https://raw.githubusercontent.com/sustainable-computing-io/kepler/refs/heads/main/grafana-dashboards/Kepler-Exporter.json
-          k8s-loadbalancer:
-            url: 'https://raw.githubusercontent.com/rfmoz/grafana-dashboards/master/prometheus/haproxy-2-full.json'
