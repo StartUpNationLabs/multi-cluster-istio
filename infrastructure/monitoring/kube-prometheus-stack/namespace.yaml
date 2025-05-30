@@ -5,3 +5,4 @@ metadata:
   labels:
     toolkit.fluxcd.io/tenant: sre-team
     release: kube-prometheus-stack
+    istio-injection: enabled
