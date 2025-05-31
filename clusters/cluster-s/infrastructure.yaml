@@ -30,6 +30,16 @@ spec:
   path: ./infrastructure/networking/istio
   prune: true
   wait: true
+  patches:
+    - patch: |-
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: istio-system
+          labels: 
+            topology.istio.io/network: network-s
+      target:
+        kind: Namespace
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
