@@ -40,6 +40,19 @@ spec:
             topology.istio.io/network: network-s
       target:
         kind: Namespace
+    - patch: |
+        - op: add
+          path: /spec/values
+          value:
+            global:
+              meshID: mesh-global
+              multiCluster:
+                clusterName: cluster-s
+              network: network-s
+      target:
+        kind: HelmRelease
+        name: istiod
+        namespace: istio-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
