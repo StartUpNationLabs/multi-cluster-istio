@@ -49,6 +49,12 @@ spec:
               multiCluster:
                 clusterName: cluster-s
               network: network-s
+            profile: ambient
+            cni:
+              cniConfDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
+              cniBinDir: /var/lib/rancher/k3s/data/cni
+            cniConfDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
+            cniBinDir: /var/lib/rancher/k3s/data/cni
       target:
         kind: HelmRelease
         namespace: istio-system
