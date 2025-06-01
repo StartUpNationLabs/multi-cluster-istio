@@ -8,6 +8,7 @@ resources:
 - ztunnel.yaml
 - namespace.yaml
 - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0-rc.1/standard-install.yaml
+- istio-metrics.yaml
 labels:
 - pairs:
     toolkit.fluxcd.io/tenant: sre-team
