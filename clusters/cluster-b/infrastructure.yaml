@@ -52,6 +52,22 @@ spec:
       target:
         kind: HelmRelease
         namespace: istio-system
+    - patch: |
+        - op: add
+          path: /spec/values
+          value:
+            global:
+              meshID: mesh-global
+              multiCluster:
+                clusterName: cluster-b
+              network: network-b
+            name: istio-eastwestgateway
+            networkGateway: network-b
+
+      target:
+        kind: HelmRelease
+        namespace: istio-system
+        name: istio-eastwestgateway
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
