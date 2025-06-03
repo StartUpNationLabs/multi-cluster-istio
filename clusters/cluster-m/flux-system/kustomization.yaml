@@ -6,5 +6,4 @@ resources:
 labels:
 - pairs:
     toolkit.fluxcd.io/tenant: sre-team
-    istio.io/dataplane-mode: ambiant
 
