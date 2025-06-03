@@ -48,6 +48,7 @@ spec:
               meshID: mesh-global
               multiCluster:
                 clusterName: cluster-s
+                enabled: true
               network: network-s
       target:
         kind: HelmRelease
