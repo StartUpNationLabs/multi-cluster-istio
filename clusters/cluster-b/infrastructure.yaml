@@ -48,7 +48,9 @@ spec:
               meshID: mesh-global
               multiCluster:
                 clusterName: cluster-b
+                enabled: true
               network: network-b
+
       target:
         kind: HelmRelease
         namespace: istio-system

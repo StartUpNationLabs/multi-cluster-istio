@@ -60,6 +60,7 @@ spec:
               meshID: mesh-global
               multiCluster:
                 clusterName: cluster-m
+                enabled: true
               network: network-m
             name: istio-eastwestgateway
             networkGateway: network-m
