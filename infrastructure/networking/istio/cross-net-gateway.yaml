@@ -15,3 +15,25 @@ spec:
         mode: AUTO_PASSTHROUGH
       hosts:
         - "*.local"
+---
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: default-gateway
+  namespace: istio-system
+spec:
+  selector:
+    istio: eastwestgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "*"
