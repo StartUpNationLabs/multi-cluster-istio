@@ -7,7 +7,7 @@ spec:
   hosts:
     - "prometheus.internal.ozeliurs.com"
   gateways:
-    - ingressgateway
+    - eastwestgateway
   http:
     - match:
         - uri:
