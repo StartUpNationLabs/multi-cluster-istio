@@ -54,6 +54,7 @@ spec:
       target:
         kind: HelmRelease
         namespace: istio-system
+        name: istiod
     - patch: |
         - op: add
           path: /spec/values
