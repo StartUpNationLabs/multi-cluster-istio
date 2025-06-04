@@ -15,16 +15,6 @@ spec:
         mode: AUTO_PASSTHROUGH
       hosts:
         - "*.local"
----
-apiVersion: networking.istio.io/v1
-kind: Gateway
-metadata:
-  name: ingressgateway
-  namespace: istio-system
-spec:
-  selector:
-    istio: ingressgateway
-  servers:
     - port:
         number: 80
         name: http
