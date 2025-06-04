@@ -86,7 +86,44 @@ spec:
           any: true
         serviceMonitorSelector: { }
         serviceMonitorSelectorNilUsesHelmValues: false
+        additionalScrapeConfigs:
+          # federation,
+          - job_name: 'datacenter-s'
+            metrics_path: /federate
+            scrape_interval: 15s
+            honor_labels: true
+            static_configs:
+              - targets: [ 'prometheus-s.internal.ozeliurs.com' ]
+            # add "datacenter = maxime" label to all metrics
+            relabel_configs:
+              - source_labels: [ ]
+                target_label: datacenter
+                replacement: s
 
+          # federation,
+          - job_name: 'datacenter-b'
+            metrics_path: /federate
+            scrape_interval: 15s
+            honor_labels: true
+            static_configs:
+              - targets: [ 'prometheus-b.internal.ozeliurs.com' ]
+            # add "datacenter = maxime" label to all metrics
+            relabel_configs:
+              - source_labels: [ ]
+                target_label: datacenter
+                replacement: b
+          # federation,
+          - job_name: 'datacenter-m'
+            metrics_path: /federate
+            scrape_interval: 15s
+            honor_labels: true
+            static_configs:
+              - targets: [ 'prometheus-m.internal.ozeliurs.com' ]
+            # add "datacenter = maxime" label to all metrics
+            relabel_configs:
+              - source_labels: [ ]
+                target_label: datacenter
+                replacement: m
 
     grafana:
 
