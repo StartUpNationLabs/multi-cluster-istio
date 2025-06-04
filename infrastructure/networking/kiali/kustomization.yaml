@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: istio-system
 resources:
   - operator.yaml
+  - kiali.yaml
