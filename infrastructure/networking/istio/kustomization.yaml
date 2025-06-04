@@ -9,6 +9,7 @@ resources:
 - istio-metrics.yaml
 - gateway.yaml
 - cross-net-gateway.yaml
+- ingress.yaml
 labels:
 - pairs:
     toolkit.fluxcd.io/tenant: sre-team

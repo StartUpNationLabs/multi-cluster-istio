@@ -16,3 +16,19 @@ spec:
         name: istio
         namespace: flux-system
       interval: 12h
+  values:
+    name: istio-ingress
+    namespace: istio-system
+    service:
+      type: NodePort
+      ports:
+        - name: http2
+          nodePort: 80
+          protocol: TCP
+          targetPort: 80
+          port: 80
+        - name: https
+          nodePort: 443
+          protocol: TCP
+          targetPort: 443
+          port: 443
