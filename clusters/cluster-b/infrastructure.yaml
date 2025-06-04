@@ -105,3 +105,23 @@ spec:
   path: ./infrastructure/monitoring/kube-prometheus-stack
   prune: true
   wait: true
+---
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  hosts:
+    - "prometheus-b.internal.ozeliurs.com"
+  gateways:
+    - eastwestgateway
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            port:
+              number: 9090
+            host: kube-prometheus-stack-prometheus
