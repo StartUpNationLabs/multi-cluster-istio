@@ -6,3 +6,7 @@ metadata:
 spec:
   auth:
     strategy: "anonymous"
+  external_services:
+    prometheus:
+      # Prometheus service name is "metrics" and is in the "telemetry" namespace
+      url: "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
